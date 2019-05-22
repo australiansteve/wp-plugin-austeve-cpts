@@ -16,32 +16,32 @@ class AUSteve_CPTs {
 	function __construct() {
 
 		//Register post types
-		add_action( 'init', array($this, 'austeve_create_conditions_post_type'), 0 );
+		add_action( 'init', array($this, 'austeve_create_programs_post_type'), 0 );
 
 	}
 
-	function austeve_create_conditions_post_type() {
+	function austeve_create_programs_post_type() {
 
 		// Set UI labels for Custom Post Type
 		$labels = array(
-			'name'                => _x( 'Conditions', 'Post Type General Name', 'austeve-cpts' ),
-			'singular_name'       => _x( 'Condition', 'Post Type Singular Name', 'austeve-cpts' ),
-			'menu_name'           => __( 'Conditions', 'austeve-cpts' ),
-			'all_items'           => __( 'All Conditions', 'austeve-cpts' ),
-			'view_item'           => __( 'View Condition', 'austeve-cpts' ),
-			'add_new_item'        => __( 'Add New Condition', 'austeve-cpts' ),
+			'name'                => _x( 'Grant Programs', 'Post Type General Name', 'austeve-cpts' ),
+			'singular_name'       => _x( 'Grant Program', 'Post Type Singular Name', 'austeve-cpts' ),
+			'menu_name'           => __( 'Grant Programs', 'austeve-cpts' ),
+			'all_items'           => __( 'All Grant Programs', 'austeve-cpts' ),
+			'view_item'           => __( 'View Grant Program', 'austeve-cpts' ),
+			'add_new_item'        => __( 'Add New Grant Program', 'austeve-cpts' ),
 			'add_new'             => __( 'Add New', 'austeve-cpts' ),
-			'edit_item'           => __( 'Edit Condition', 'austeve-cpts' ),
-			'update_item'         => __( 'Update Condition', 'austeve-cpts' ),
-			'search_items'        => __( 'Search Conditions', 'austeve-cpts' ),
+			'edit_item'           => __( 'Edit Grant Program', 'austeve-cpts' ),
+			'update_item'         => __( 'Update Grant Program', 'austeve-cpts' ),
+			'search_items'        => __( 'Search Grant Programs', 'austeve-cpts' ),
 			'not_found'           => __( 'Not Found', 'austeve-cpts' ),
 			'not_found_in_trash'  => __( 'Not found in Trash', 'austeve-cpts' ),
 		);
 		
 		// Set other options for Custom Post Type		
 		$args = array(
-			'label'               => __( 'Conditions', 'austeve-cpts' ),
-			'description'         => __( 'Conditions', 'austeve-cpts' ),
+			'label'               => __( 'Grant Programs', 'austeve-cpts' ),
+			'description'         => __( 'Grant Programs', 'austeve-cpts' ),
 			'labels'              => $labels,
 			// Features this CPT supports in Post Editor
 			'supports'            => array( 'title', 'author', 'revisions', 'editor', 'thumbnail'),
@@ -52,7 +52,7 @@ class AUSteve_CPTs {
 			* is like Posts.
 			*/	
 			'hierarchical'        => false,
-			'rewrite'           => array( 'slug' => 'conditions' ),
+			'rewrite'           => array( 'slug' => 'programs' ),
 			'public'              => true,
 			'show_ui'             => true,
 			'show_in_menu'        => true,
@@ -65,11 +65,11 @@ class AUSteve_CPTs {
 			'publicly_queryable'  => true,
 			'show_in_rest'  	=> true,
 			'capability_type'    => 'post',
-			'menu_icon'				=> 'dashicons-plus',
+			'menu_icon'				=> 'dashicons-awards',
 		);
 		
 		// Registering your Custom Post Type
-		register_post_type( 'austeve-conditions', $args );
+		register_post_type( 'austeve-programs', $args );
 	}
 
 }
