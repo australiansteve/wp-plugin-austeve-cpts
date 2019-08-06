@@ -35,6 +35,8 @@ class AUSteve_CPTs {
 
 	 	add_action( 'pre_get_posts', array($this, 'pre_get_deadline_posts_admin') );
 
+	 	add_action( 'pre_get_posts', array($this, 'pre_get_deadline_posts') );
+
 	}
 
 	function austeve_register_menu_item() { 
@@ -223,6 +225,39 @@ class AUSteve_CPTs {
 	        $query->set('order','ASC');
 	    }
 
+
+	    if ('austeve-deadline' == $query->get( 'post_type')) {
+		    //add meta query to only get deadlines AFTER the 'timeout' period'
+
+		    $days = get_field('remove_deadlines_after', 'option');
+		    $startDate = (new DateTime(null, new DateTimeZone('America/Halifax')))->modify('-'.$days.' days');
+
+		    $meta_query = array(
+		    	array(
+		    		'key' => 'date',
+		    		'value' 	=> $startDate->format('Ymd'),
+		    		'compare' 	=> '>=',
+		    		'type' 	=> 'DATE'
+		    	)
+		    );
+		    $query->set('meta_query', $meta_query);
+		}
+	}
+
+	function pre_get_deadline_posts( $query ) {
+		if( is_admin() )
+			return;
+	 
+	    $orderby = $query->get( 'orderby');
+	 
+	    if ('austeve-deadline' == $query->get( 'post_type')) {
+	    	//default ordering for deadlines
+	        $query->set('meta_key', 'date');
+	        $query->set('orderby', 'meta_value_num');
+	        $query->set('order', 'ASC');
+
+	        $query->set('posts_per_page', '-1'); //Always get all deadlines
+	    }
 
 	    if ('austeve-deadline' == $query->get( 'post_type')) {
 		    //add meta query to only get deadlines AFTER the 'timeout' period'
