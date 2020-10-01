@@ -15,67 +15,72 @@ class AUSteve_CPTs {
 
 	function __construct() {
 
-		//Add top level admin menu item
-		add_action( 'admin_menu', array($this, 'austeve_register_menu_item') ); 
-
 		//Register post types
-		add_action( 'init', array($this, 'austeve_create_programs_post_type'), 0 );
+		add_action( 'init', array($this, 'austeve_create_post_type_team_members'), 0 );
+		add_action( 'init', array($this, 'austeve_create_post_type_projects'), 0 );
 
-		//Register post types
-		add_action( 'init', array($this, 'austeve_create_deadline_post_type'), 0 );
-
-		  // run after ACF saves the $_POST['fields'] data
-		add_action(	'acf/save_post', array($this, 'post_title_updater'), 20);
-
-		add_filter( 'manage_austeve-deadline_posts_columns', array($this, 'set_custom_edit_deadline_columns') );
-
-		add_action( 'manage_austeve-deadline_posts_custom_column' , array($this, 'custom_deadline_column'), 10, 2 );
-
-		add_filter( 'manage_edit-austeve-deadline_sortable_columns', array($this, 'sortable_deadline_column') );
-
-	 	add_action( 'pre_get_posts', array($this, 'pre_get_deadline_posts_admin') );
-
-	 	add_action( 'pre_get_posts', array($this, 'pre_get_deadline_posts') );
+		//Register custom taxonomies
+		add_action( 'init', array($this, 'austeve_create_taxonomies'), 0 );
 
 	}
 
-	function austeve_register_menu_item() { 
+	function austeve_create_taxonomies() {
 
-		add_menu_page(
-			'Grant Programs',
-			'Grant Programs',
-			'read',
-			'grant-programs-menu',
-			'',
-			'dashicons-awards',
-			5
+		$labels = array(
+			'name'                       => _x( 'Project Categories', 'taxonomy general name', 'austeve-cpts' ),
+			'singular_name'              => _x( 'Project Category', 'taxonomy singular name', 'austeve-cpts' ),
+			'search_items'               => __( 'Search Project Categories', 'austeve-cpts' ),
+			'popular_items'              => __( 'Popular Project Categories', 'austeve-cpts' ),
+			'all_items'                  => __( 'All Project Categories', 'austeve-cpts' ),
+			'parent_item'       			=> __( 'Parent Project Category', 'austeve-cpts' ),
+			'parent_item_colon' 			=> __( 'Parent Project Category:', 'austeve-cpts' ),
+			'edit_item'                  => __( 'Edit Project Category', 'austeve-cpts' ),
+			'update_item'                => __( 'Update Project Category', 'austeve-cpts' ),
+			'add_new_item'               => __( 'Add New Project Category', 'austeve-cpts' ),
+			'new_item_name'              => __( 'New Project Category Name', 'austeve-cpts' ),
+			'separate_items_with_commas' => __( 'Separate project categories with commas', 'austeve-cpts' ),
+			'add_or_remove_items'        => __( 'Add or remove project categories', 'austeve-cpts' ),
+			'choose_from_most_used'      => __( 'Choose from the most used project categories', 'austeve-cpts' ),
+			'not_found'                  => __( 'No project categories found.', 'austeve-cpts' ),
+			'menu_name'                  => __( 'Project Categories', 'austeve-cpts' ),
 		);
 
+		$args = array(
+			'hierarchical'      => true,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'query_var'         => true,
+			'show_in_rest'		=> true,
+			'rewrite'               => array( 'slug' => 'project-category' ),
+		);
+
+		register_taxonomy( 'project-category', 'austeve-projects', $args );
+
 	}
 
-
-	function austeve_create_programs_post_type() {
+	function austeve_create_post_type_team_members() {
 
 		// Set UI labels for Custom Post Type
 		$labels = array(
-			'name'                => _x( 'Grant Programs', 'Post Type General Name', 'austeve-cpts' ),
-			'singular_name'       => _x( 'Grant Program', 'Post Type Singular Name', 'austeve-cpts' ),
-			'menu_name'           => __( 'Grant Programs', 'austeve-cpts' ),
-			'all_items'           => __( 'Grant Programs', 'austeve-cpts' ),
-			'view_item'           => __( 'View Grant Program', 'austeve-cpts' ),
-			'add_new_item'        => __( 'Add New Grant Program', 'austeve-cpts' ),
+			'name'                => _x( 'Team Members', 'Post Type General Name', 'austeve-cpts' ),
+			'singular_name'       => _x( 'Team Member', 'Post Type Singular Name', 'austeve-cpts' ),
+			'menu_name'           => __( 'Team Members', 'austeve-cpts' ),
+			'all_items'           => __( 'All Team Members', 'austeve-cpts' ),
+			'view_item'           => __( 'View Team Member', 'austeve-cpts' ),
+			'add_new_item'        => __( 'Add New Team Member', 'austeve-cpts' ),
 			'add_new'             => __( 'Add New', 'austeve-cpts' ),
-			'edit_item'           => __( 'Edit Grant Program', 'austeve-cpts' ),
-			'update_item'         => __( 'Update Grant Program', 'austeve-cpts' ),
-			'search_items'        => __( 'Search Grant Programs', 'austeve-cpts' ),
+			'edit_item'           => __( 'Edit Team Member', 'austeve-cpts' ),
+			'update_item'         => __( 'Update Team Member', 'austeve-cpts' ),
+			'search_items'        => __( 'Search Team Members', 'austeve-cpts' ),
 			'not_found'           => __( 'Not Found', 'austeve-cpts' ),
 			'not_found_in_trash'  => __( 'Not found in Trash', 'austeve-cpts' ),
 		);
 		
 		// Set other options for Custom Post Type		
 		$args = array(
-			'label'               => __( 'Grant Programs', 'austeve-cpts' ),
-			'description'         => __( 'Grant Programs', 'austeve-cpts' ),
+			'label'               => __( 'Team Members', 'austeve-cpts' ),
+			'description'         => __( 'Team Members', 'austeve-cpts' ),
 			'labels'              => $labels,
 			// Features this CPT supports in Post Editor
 			'supports'            => array( 'title', 'author', 'revisions', 'editor', 'thumbnail'),
@@ -86,51 +91,50 @@ class AUSteve_CPTs {
 			* is like Posts.
 			*/	
 			'hierarchical'        => false,
-			'rewrite'           => array( 'slug' => 'programs' ),
+			'rewrite'           => array( 'slug' => 'team-members' ),
 			'public'              => true,
 			'show_ui'             => true,
-			'show_in_menu'        => 'grant-programs-menu',
-			'show_in_nav_menus'   => true,
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 5,
 			'can_export'          => true,
-			'has_archive'         => true,
+			'has_archive'         => false,
 			'exclude_from_search' => false,
 			'publicly_queryable'  => true,
 			'show_in_rest'  	=> true,
 			'capability_type'    => 'post',
-			'menu_icon'				=> 'dashicons-awards',
+			'menu_icon'				=> 'dashicons-universal-access',
 		);
 		
 		// Registering your Custom Post Type
-		register_post_type( 'austeve-programs', $args );
+		register_post_type( 'austeve-team-members', $args );
 	}
 
-	function austeve_create_deadline_post_type() {
+	function austeve_create_post_type_projects() {
 
+		
 		// Set UI labels for Custom Post Type
 		$labels = array(
-			'name'                => _x( 'Deadlines', 'Post Type General Name', 'austeve-cpts' ),
-			'singular_name'       => _x( 'Deadline', 'Post Type Singular Name', 'austeve-cpts' ),
-			'menu_name'           => __( 'Deadlines', 'austeve-cpts' ),
-			'all_items'           => __( 'Deadlines', 'austeve-cpts' ),
-			'view_item'           => __( 'View Deadline', 'austeve-cpts' ),
-			'add_new_item'        => __( 'Add New Deadline', 'austeve-cpts' ),
+			'name'                => _x( 'Projects', 'Post Type General Name', 'austeve-cpts' ),
+			'singular_name'       => _x( 'Project', 'Post Type Singular Name', 'austeve-cpts' ),
+			'menu_name'           => __( 'Projects', 'austeve-cpts' ),
+			'all_items'           => __( 'All Projects', 'austeve-cpts' ),
+			'view_item'           => __( 'View Project', 'austeve-cpts' ),
+			'add_new_item'        => __( 'Add New Project', 'austeve-cpts' ),
 			'add_new'             => __( 'Add New', 'austeve-cpts' ),
-			'edit_item'           => __( 'Edit Deadline', 'austeve-cpts' ),
-			'update_item'         => __( 'Update Deadline', 'austeve-cpts' ),
-			'search_items'        => __( 'Search Deadlines', 'austeve-cpts' ),
+			'edit_item'           => __( 'Edit Project', 'austeve-cpts' ),
+			'update_item'         => __( 'Update Project', 'austeve-cpts' ),
+			'search_items'        => __( 'Search Projects', 'austeve-cpts' ),
 			'not_found'           => __( 'Not Found', 'austeve-cpts' ),
 			'not_found_in_trash'  => __( 'Not found in Trash', 'austeve-cpts' ),
 		);
 		
 		// Set other options for Custom Post Type		
 		$args = array(
-			'label'               => __( 'Deadlines', 'austeve-cpts' ),
-			'description'         => __( 'Deadlines', 'austeve-cpts' ),
+			'label'               => __( 'Projects', 'austeve-cpts' ),
+			'description'         => __( 'Projects', 'austeve-cpts' ),
 			'labels'              => $labels,
 			// Features this CPT supports in Post Editor
-			'supports'            => array( 'author' ),
+			'supports'            => array( 'title', 'author', 'revisions', 'editor', 'thumbnail'),
 			// You can associate this CPT with a taxonomy or custom taxonomy. 
 			'taxonomies'          => array( ),
 			/* A hierarchical CPT is like Pages and can have
@@ -138,144 +142,27 @@ class AUSteve_CPTs {
 			* is like Posts.
 			*/	
 			'hierarchical'        => false,
-			'rewrite'           => array( 'slug' => 'deadlines' ),
+			'rewrite'           => array( 'slug' => 'projects' ),
 			'public'              => true,
 			'show_ui'             => true,
-			'show_in_menu'        => 'grant-programs-menu',
+			'show_in_menu'        => true,
 			'show_in_nav_menus'   => true,
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 5,
 			'can_export'          => true,
-			'has_archive'         => true,
-			'exclude_from_search' => true,
+			'has_archive'         => false,
+			'exclude_from_search' => false,
 			'publicly_queryable'  => true,
 			'show_in_rest'  	=> true,
 			'capability_type'    => 'post',
-			'menu_icon'				=> 'dashicons-clock',
+			'menu_icon'				=> 'dashicons-admin-appearance',
 		);
 		
 		// Registering your Custom Post Type
-		register_post_type( 'austeve-deadline', $args );
-	}
-
-	//Auto add and update Title field:
-	function post_title_updater( $post_id ) {
-
-		if ( get_post_type() == 'austeve-deadline' ) {
-
-			$my_post = array();
-			$my_post['ID'] = $post_id;
-
-			$grantProgram = get_field('grant-program');
-			$date = get_field('date', $post_id);
-
-			$my_post['post_title'] = get_the_title($grantProgram);
-			
-			// Update the post into the database
-			wp_update_post( $my_post );
-		}
+		register_post_type( 'austeve-projects', $args );
 
 	}
 
-	// Add the custom columns to the book post type:
-	
-	function set_custom_edit_deadline_columns($columns) {
-		unset( $columns['author'] );
-		unset( $columns['date'] );
-
-		$columns['deadline'] = __( 'Deadline', 'austeve-cpts' );
-
-		return $columns;
-	}
-	function sortable_deadline_column( $columns ) {
-		$columns['deadline'] = 'deadline';
-
-		return $columns;
-	}
-
-	// Add the data to the custom columns for the book post type:
-	function custom_deadline_column( $column, $post_id ) {
-		switch ( $column ) {
-
-			case 'deadline' :
-				$external = get_field( 'date', $post_id);
-				$format = "Ymd";
-				$dateobj = DateTime::createFromFormat($format, $external);
-
-				echo $dateobj->format('dS F Y'); 
-				break;
-
-		}
-	}
-   
-	function pre_get_deadline_posts_admin( $query ) {
-		if( ! is_admin() )
-			return;
-	 
-	    $orderby = $query->get( 'orderby');
-	 
-	    if( 'deadline' == $orderby ) {
-	        $query->set('meta_key','date');
-	        $query->set('orderby','meta_value_num');
-	    }
-	    else if ('austeve-deadline' == $query->get( 'post_type')) {
-	    	//default ordering for deadlines
-	        $query->set('meta_key','date');
-	        $query->set('orderby','meta_value_num');
-	        $query->set('order','ASC');
-	    }
-
-
-	    if ('austeve-deadline' == $query->get( 'post_type')) {
-		    //add meta query to only get deadlines AFTER the 'timeout' period'
-
-		    $days = get_field('remove_deadlines_after', 'option');
-		    $startDate = (new DateTime(null, new DateTimeZone('America/Halifax')))->modify('-'.$days.' days');
-
-		    $meta_query = array(
-		    	array(
-		    		'key' => 'date',
-		    		'value' 	=> $startDate->format('Ymd'),
-		    		'compare' 	=> '>=',
-		    		'type' 	=> 'DATE'
-		    	)
-		    );
-		    $query->set('meta_query', $meta_query);
-		}
-	}
-
-	function pre_get_deadline_posts( $query ) {
-		if( is_admin() )
-			return;
-	 
-	    $orderby = $query->get( 'orderby');
-	 
-	    if ('austeve-deadline' == $query->get( 'post_type')) {
-	    	//default ordering for deadlines
-	        $query->set('meta_key', 'date');
-	        $query->set('orderby', 'meta_value_num');
-	        $query->set('order', 'ASC');
-
-	        $query->set('posts_per_page', '-1'); //Always get all deadlines
-	    }
-
-	    if ('austeve-deadline' == $query->get( 'post_type')) {
-		    //add meta query to only get deadlines AFTER the 'timeout' period'
-
-		    $days = get_field('remove_deadlines_after', 'option');
-		    $startDate = (new DateTime(null, new DateTimeZone('America/Halifax')))->modify('-'.$days.' days');
-
-		    $meta_query = array(
-		    	array(
-		    		'key' => 'date',
-		    		'value' 	=> $startDate->format('Ymd'),
-		    		'compare' 	=> '>=',
-		    		'type' 	=> 'DATE'
-		    	)
-		    );
-		    $query->set('meta_query', $meta_query);
-		}
-	}
 }
 
 // Create CPTs!
