@@ -3,7 +3,7 @@
 /*
 Plugin Name: Custom Post Types
 Plugin URI: https://github.com/australiansteve/austeve-cpts
-Description: Initialize Custom Post Types
+Description: Custom Post Types for PeterRowan.ca
 Version: 1.0.0
 Author: AustralianSteve
 Author URI: http://australiansteve.com
@@ -11,12 +11,11 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-class AUSteve_CPTs {
+class AUSteve_CPTs_PeterRowan {
 
 	function __construct() {
 
 		//Register post types
-		add_action( 'init', array($this, 'austeve_create_post_type_team_members'), 0 );
 		add_action( 'init', array($this, 'austeve_create_post_type_projects'), 0 );
 
 		//Register custom taxonomies
@@ -57,56 +56,6 @@ class AUSteve_CPTs {
 
 		register_taxonomy( 'project-category', 'austeve-projects', $args );
 
-	}
-
-	function austeve_create_post_type_team_members() {
-
-		// Set UI labels for Custom Post Type
-		$labels = array(
-			'name'                => _x( 'Team Members', 'Post Type General Name', 'austeve-cpts' ),
-			'singular_name'       => _x( 'Team Member', 'Post Type Singular Name', 'austeve-cpts' ),
-			'menu_name'           => __( 'Team Members', 'austeve-cpts' ),
-			'all_items'           => __( 'All Team Members', 'austeve-cpts' ),
-			'view_item'           => __( 'View Team Member', 'austeve-cpts' ),
-			'add_new_item'        => __( 'Add New Team Member', 'austeve-cpts' ),
-			'add_new'             => __( 'Add New', 'austeve-cpts' ),
-			'edit_item'           => __( 'Edit Team Member', 'austeve-cpts' ),
-			'update_item'         => __( 'Update Team Member', 'austeve-cpts' ),
-			'search_items'        => __( 'Search Team Members', 'austeve-cpts' ),
-			'not_found'           => __( 'Not Found', 'austeve-cpts' ),
-			'not_found_in_trash'  => __( 'Not found in Trash', 'austeve-cpts' ),
-		);
-		
-		// Set other options for Custom Post Type		
-		$args = array(
-			'label'               => __( 'Team Members', 'austeve-cpts' ),
-			'description'         => __( 'Team Members', 'austeve-cpts' ),
-			'labels'              => $labels,
-			// Features this CPT supports in Post Editor
-			'supports'            => array( 'title', 'author', 'revisions', 'editor', 'thumbnail'),
-			// You can associate this CPT with a taxonomy or custom taxonomy. 
-			'taxonomies'          => array( ),
-			/* A hierarchical CPT is like Pages and can have
-			* Parent and child items. A non-hierarchical CPT
-			* is like Posts.
-			*/	
-			'hierarchical'        => false,
-			'rewrite'           => array( 'slug' => 'team-members' ),
-			'public'              => true,
-			'show_ui'             => true,
-			'show_in_admin_bar'   => true,
-			'menu_position'       => 5,
-			'can_export'          => true,
-			'has_archive'         => false,
-			'exclude_from_search' => false,
-			'publicly_queryable'  => true,
-			'show_in_rest'  	=> true,
-			'capability_type'    => 'post',
-			'menu_icon'				=> 'dashicons-universal-access',
-		);
-		
-		// Registering your Custom Post Type
-		register_post_type( 'austeve-team-members', $args );
 	}
 
 	function austeve_create_post_type_projects() {
@@ -150,7 +99,7 @@ class AUSteve_CPTs {
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 5,
 			'can_export'          => true,
-			'has_archive'         => false,
+			'has_archive'         => true,
 			'exclude_from_search' => false,
 			'publicly_queryable'  => true,
 			'show_in_rest'  	=> true,
@@ -166,6 +115,6 @@ class AUSteve_CPTs {
 }
 
 // Create CPTs!
-$austeveCPTs = new AUSteve_CPTs();
+$austeveCPTsPeterRowan = new AUSteve_CPTs_PeterRowan();
 
 ?>
